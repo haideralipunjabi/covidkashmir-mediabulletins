@@ -7,3 +7,8 @@ Automated Repository to Store Media Bulletins released by Department of Informat
 The bulletins are downloaded and pushed to the repository using [Travis-CI](https://travis-ci.org). They are stored in `bulletins` folder.
 
 Each bulletin directory contains a `README.md` which has the source tweet of that bulletin.
+<<<<<<< HEAD
+=======
+
+Download CSV Data: https://covidkashmir.org/api/bulletin
+>>>>>>> 09661b54830733ed265cef35ffa0b8391062f8f9

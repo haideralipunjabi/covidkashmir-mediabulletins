@@ -2,6 +2,8 @@ import requests
 from requests_oauthlib import OAuth1
 import os
 from os import listdir
+from dotenv import load_dotenv
+load_dotenv("/home/haideralipunjabi/Github/covidkashmir-mediabulletins/secret.env")
 
 auth = OAuth1(os.environ["API_KEY"], os.environ["API_SECRET"], os.environ["ACCESS_TOKEN"],os.environ["ACCESS_TOKEN_SECRET"])
 url = 'https://api.twitter.com/1.1/statuses/show.json'
@@ -34,16 +36,19 @@ def download_missing_bulletins():
         if not done_dates.__contains__(day[0]):
             filtered_csv_data.append(day)
     for day in filtered_csv_data:
+        print(day)
         date = day[0].replace("/","-")
-        tweet_url = day[-1]
-        filename = extract_id(day[-1])
-        params = {'id':filename, 'tweet_mode':'extended'}
-        r = requests.get(url, auth=auth, params=params)
-        data = r.json()
-        media =data["extended_entities"]["media"]
         os.system("mkdir bulletins/"+date)
-        for img in media:
-            save_image(img["media_url_https"], "pg-%s-"%(media.index(img)+1)+ img["id_str"], date)
+        tweet_urls = day[-1].split("-")
+        print(tweet_urls)
+        for tweet_url in tweet_urls:
+            filename = extract_id(tweet_url)
+            params = {'id':filename, 'tweet_mode':'extended'}
+            r = requests.get(url, auth=auth, params=params)
+            data = r.json()
+            media =data["extended_entities"]["media"]
+            for img in media:
+                save_image(img["media_url_https"], "pg--%s%s-"%(tweet_urls.index(tweet_url)+1,media.index(img)+1)+ img["id_str"], date)
         make_readme(date,tweet_url)
 
 download_missing_bulletins()
