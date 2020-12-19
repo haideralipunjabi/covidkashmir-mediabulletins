@@ -12,6 +12,8 @@ def save_image(url,name,folder):
     parent_folder = dt.strptime(folder,"%d-%m-%Y").strftime("%B %Y")
     if not os.path.isdir("bulletins/"+parent_folder):
         os.mkdir("bulletins/"+parent_folder)
+    if not os.path.isdir(f"bulletins/{parent_folder}/{folder}"):
+        os.mkdir(f"bulletins/{parent_folder}/{folder}")
     with open('bulletins/%s/%s/%s.jpg'%(parent_folder,folder,name), 'wb') as handle:
         response = requests.get(url, stream=True)
         if not response.ok:
