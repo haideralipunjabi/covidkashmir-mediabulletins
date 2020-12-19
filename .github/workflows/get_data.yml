@@ -1,0 +1,31 @@
+name: Get Data and Deploy
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  getdata:
+    name: Get Data
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.6'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r .github/requirements.txt
+      - run: python .github/get_bulletins.py
+        env:
+          DEFAULT_BRANCH: main
+          API_KEY: ${{ secrets.API_KEY }}
+          API_SECRET: ${{ secrets.API_SECRET }}
+          ACCESS_TOKEN : ${{ secrets.ACCESS_TOKEN }}
+          ACCESS_TOKEN_SECRET : ${{ secrets.ACCESS_TOKEN_SECRET }}
+      - uses: mikeal/publish-to-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

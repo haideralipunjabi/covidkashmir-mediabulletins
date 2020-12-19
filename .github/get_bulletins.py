@@ -2,15 +2,17 @@ import requests
 from requests_oauthlib import OAuth1
 import os
 from os import listdir
-from dotenv import load_dotenv
-load_dotenv("/home/haideralipunjabi/Github/covidkashmir-mediabulletins/secret.env")
+from datetime import datetime as dt
 
 auth = OAuth1(os.environ["API_KEY"], os.environ["API_SECRET"], os.environ["ACCESS_TOKEN"],os.environ["ACCESS_TOKEN_SECRET"])
 url = 'https://api.twitter.com/1.1/statuses/show.json'
 csvurl = 'https://covidkashmir.org/api/bulletin'
 
 def save_image(url,name,folder):
-    with open('bulletins/%s/%s.jpg'%(folder,name), 'wb') as handle:
+    parent_folder = dt.strptime(folder,"%d-%m-%Y").strftime("%B %Y")
+    if not os.path.isdir("bulletins/"+parent_folder):
+        os.mkdir("bulletins/"+parent_folder)
+    with open('bulletins/%s/%s/%s.jpg'%(parent_folder,folder,name), 'wb') as handle:
         response = requests.get(url, stream=True)
         if not response.ok:
             print(response)
@@ -23,12 +25,17 @@ def extract_id(url):
     return url.split("/")[-1].split("?")[0]
 
 def make_readme(date,url):
-    f = open("bulletins/%s/README.md"%(date),"w")
+    parent_folder = dt.strptime(date,"%d-%m-%Y").strftime("%B %Y")
+    f = open("bulletins/%s/%s/README.md"%(parent_folder,date),"w")
     f.write('[Source: %s](%s)'%(url,url))
     f.close()
 
 def download_missing_bulletins():
-    done_dates = [f.replace("-","/") for f in listdir("bulletins")]
+    done_dates = []
+    for f in listdir("bulletins"):
+        if os.path.isdir("bulletins/"+f):
+            done_dates.extend(listdir("bulletins/"+f))
+    done_dates = [f.replace("-","/") for f in done_dates]
     csvfile = requests.get(csvurl).text
     csvdata = [x.split(",") for x in csvfile.splitlines()]
     filtered_csv_data = []
@@ -38,7 +45,6 @@ def download_missing_bulletins():
     for day in filtered_csv_data:
         print(day)
         date = day[0].replace("/","-")
-        os.system("mkdir bulletins/"+date)
         tweet_urls = day[-1].split("-")
         print(tweet_urls)
         for tweet_url in tweet_urls:
