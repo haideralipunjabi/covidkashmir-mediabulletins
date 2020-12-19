@@ -1,1 +1,0 @@
-[Source: https://twitter.com/diprjk/status/1302225242824142850](https://twitter.com/diprjk/status/1302225242824142850)
