@@ -7,6 +7,7 @@ from datetime import datetime as dt
 auth = OAuth1(os.environ["API_KEY"], os.environ["API_SECRET"], os.environ["ACCESS_TOKEN"],os.environ["ACCESS_TOKEN_SECRET"])
 url = 'https://api.twitter.com/1.1/statuses/show.json'
 csvurl = 'https://covidkashmir.org/api/bulletin'
+skip = ['13/10/2022','12/10/2022']
 
 def save_image(url,name,folder):
     parent_folder = dt.strptime(folder,"%d-%m-%Y").strftime("%B %Y")
@@ -42,7 +43,7 @@ def download_missing_bulletins():
     csvdata = [x.split(",") for x in csvfile.splitlines()]
     filtered_csv_data = []
     for day in csvdata[1:]:
-        if not done_dates.__contains__(day[0]):
+        if not done_dates.__contains__(day[0]) and not skip.__contains__(day[0]):
             filtered_csv_data.append(day)
     for day in filtered_csv_data:
         print(day)
