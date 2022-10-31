@@ -7,7 +7,7 @@ from datetime import datetime as dt
 auth = OAuth1(os.environ["API_KEY"], os.environ["API_SECRET"], os.environ["ACCESS_TOKEN"],os.environ["ACCESS_TOKEN_SECRET"])
 url = 'https://api.twitter.com/1.1/statuses/show.json'
 csvurl = 'https://covidkashmir.org/api/bulletin'
-skip = ['13/10/2022','12/10/2022', '20/10/2022','21/10/2022']
+skip = ['13/10/2022','12/10/2022', '20/10/2022','21/10/2022','28/10/2022','29/10/2022']
 
 def save_image(url,name,folder):
     parent_folder = dt.strptime(folder,"%d-%m-%Y").strftime("%B %Y")
