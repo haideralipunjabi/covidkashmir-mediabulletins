@@ -26,6 +26,7 @@ jobs:
           API_SECRET: ${{ secrets.API_SECRET }}
           ACCESS_TOKEN : ${{ secrets.ACCESS_TOKEN }}
           ACCESS_TOKEN_SECRET : ${{ secrets.ACCESS_TOKEN_SECRET }}
+          CSV_URL: ${{ secrets.CSV_URL }}
       - uses: mikeal/publish-to-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
